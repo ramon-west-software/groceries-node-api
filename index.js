@@ -65,6 +65,10 @@ app.post(process.env.LOGIN_ENDPOINT, async (req, res) => {
   }
 });
 
+app.get('/', (req,res) => {
+  res.json('Hello groceries user!');
+})
+
 // PROTECTED ENDPOINTS
 // GET USER GROCERIES
 app.get(process.env.GET_USER_DATA_ENDPOINT, validateToken, async (req, res) => {
