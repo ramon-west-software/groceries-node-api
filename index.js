@@ -35,8 +35,8 @@ const validateToken = async (req, res, next) => {
 };
 
 // API ENDPOINTS
-app.listen(8080, () => {
-  console.log("Welcome, listening on port 8080");
+app.listen(process.env.PORT, () => {
+  console.log( `Welcome, listening on port ${process.env.PORT}`);
 });
 
 // USER ENDPOINTS:
