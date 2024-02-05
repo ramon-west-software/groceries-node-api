@@ -6,8 +6,8 @@ class UserService {
   }
 
   async getUserData(id) {
-    const user = await this.userDao.getUserData(id);
-    return user;
+    const userData = await this.userDao.getUserData(id);
+    return userData;
   }
 
   async getAllUsers() {
@@ -15,8 +15,13 @@ class UserService {
     return users;
   }
 
-  async authenticateUser(login) {
-    const user = await this.userDao.authenticateUser(login);
+  async authenticateUser(userDetails) {
+    const user = await this.userDao.authenticateUser(userDetails);
+    return user;
+  }
+
+  async createUser(userDetails) {
+    const user = await this.userDao.insertUser(userDetails);
     return user;
   }
 }
