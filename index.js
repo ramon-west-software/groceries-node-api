@@ -1,6 +1,6 @@
 import express from "express";
 import UserService from "./src/service/UserService.js";
-import StorageAreaService from "./src/service/StorageAreaService.js"
+import StorageAreaService from "./src/service/StorageAreaService.js";
 import CategoryService from "./src/service/CategoryService.js";
 import ItemService from "./src/service/ItemService.js";
 import cors from "cors";
@@ -22,7 +22,7 @@ const validateToken = async (req, res, next) => {
   const token = await req.header(process.env.REQUEST_TOKEN_HEADER);
   // if no token is present, return error
   if (!token) {
-    return res.status(401).json({ message: "Missing token." });
+    return res.status(401).json({ "message": "Missing token." });
   }
   // if token is present, verify validity and decode
   try {
@@ -30,22 +30,48 @@ const validateToken = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token." });
+    return res.status(401).json({ "message": "Invalid token." });
   }
 };
 
 // API ENDPOINTS
 app.listen(process.env.PORT, () => {
-  console.log( `Welcome, listening on port ${process.env.PORT}`);
+  console.log(`Welcome, listening on port ${process.env.PORT}`);
 });
 
 // USER ENDPOINTS:
 // TODO: CREATE NEW USER ENDPOINT
+
+app.post(process.env.REGISTER_ENDPOINT, async (req, res) => {
+  const { username, email, password } = await req.body;
+
+  // check if user exists
+  const userExists = await userService.authenticateUser([email, password]);
+  if (userExists) {
+    res
+      .status(401)
+      .json({ message: "Invalid Credentials, user already exists." });
+  } else {
+    const userCreated = await userService.createUser([
+      username,
+      email,
+      password,
+    ]);
+    if (userCreated) {
+      res
+        .status(201)
+        .json({ message: `User ${username} successfully created!` });
+    } else {
+      res.status(500).json({ "message": "Unable to create User" });
+    }
+  }
+});
+
 //  POST LOGIN - generate JWT
 app.post(process.env.LOGIN_ENDPOINT, async (req, res) => {
-  const { username, password } = await req.body;
+  const { email, password } = await req.body;
   // validate user exists in database
-  let authUser = await userService.authenticateUser([username, password]);
+  let authUser = await userService.authenticateUser([email, password]);
   if (authUser) {
     // generate token
     const payload = {
@@ -59,15 +85,15 @@ app.post(process.env.LOGIN_ENDPOINT, async (req, res) => {
     };
     const token = jwt.sign(payload, secretKey, options);
     // return token
-    res.json({ token });
+    res.status(200).json({ token });
   } else {
     res.status(401).json({ message: "Invalid Credentials" });
   }
 });
 
-app.get('/', (req,res) => {
-  res.json('Hello groceries user!');
-})
+app.get("/", (req, res) => {
+  res.json("Hello groceries user!");
+});
 
 // PROTECTED ENDPOINTS
 // GET USER GROCERIES
@@ -84,11 +110,15 @@ app.get(process.env.GET_STORAGE_ENDPOINT, validateToken, async (req, res) => {
   res.json(storageArea);
 });
 // GET ALL STORAGE AREAS BY USER_ID
-app.get(process.env.GET_USER_STORAGE_ENDPOINT, validateToken, async (req, res) => {
-  let userId = req.params.userId;
-  let storageAreas = await storageAreaService.getStorageAreasByUserId(userId);
-  res.json(storageAreas);
-});
+app.get(
+  process.env.GET_USER_STORAGE_ENDPOINT,
+  validateToken,
+  async (req, res) => {
+    let userId = req.params.userId;
+    let storageAreas = await storageAreaService.getStorageAreasByUserId(userId);
+    res.json(storageAreas);
+  }
+);
 
 // EDIT STORAGE AREA BY ID
 // POST NEW STORAGE AREA

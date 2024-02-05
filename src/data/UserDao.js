@@ -59,10 +59,24 @@ class UserDao {
     return userData;
   }
 
-  async authenticateUser(login) {
-    const sql = `select user_id, user_name from groceries.users u where user_name = ? and password = ?;`;
-    const [user] = await databaseInstance.query(sql, login);
+  async authenticateUser(userDetails) {
+    const sql = `select user_id, user_name from groceries.users u where email = ? and password = ?;`;
+    const [user] = await databaseInstance.query(sql, userDetails);
     return user;
+  }
+
+  async insertUser(userDetails) {
+    const sql = `INSERT INTO users (user_name, email, password, role) VALUES (?, ?, ?, 1);`;
+    const result =  await databaseInstance.query(sql, userDetails, (err, result) => {
+        if (err) {
+          console.error('Error inserting record:', err);
+        } else {
+          const newId = result.insertId;
+          console.log('Record inserted successfully with ID:', newId);
+        }
+      }
+      );
+      return result.insertId;
   }
 }
 
