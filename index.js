@@ -22,7 +22,7 @@ const validateToken = async (req, res, next) => {
   const token = await req.header(process.env.REQUEST_TOKEN_HEADER);
   // if no token is present, return error
   if (!token) {
-    return res.status(401).json({ "message": "Missing token." });
+    return res.status(401).json({ message: "Missing token." });
   }
   // if token is present, verify validity and decode
   try {
@@ -30,7 +30,7 @@ const validateToken = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ "message": "Invalid token." });
+    return res.status(401).json({ message: "Invalid token." });
   }
 };
 
@@ -50,17 +50,16 @@ app.post(process.env.REGISTER_ENDPOINT, async (req, res) => {
       .status(401)
       .json({ message: "Invalid Credentials, user already exists." });
   } else {
-    const newUserId = await userService.createUser([
-      username,
-      email,
-      password,
-    ]);
+    const newUserId = await userService.createUser([username, email, password]);
     if (newUserId) {
       res
         .status(201)
-        .json({ message: `User ${username} successfully created!`, userId: `${newUserId}` });
+        .json({
+          message: `User ${username} successfully created!`,
+          userId: `${newUserId}`,
+        });
     } else {
-      res.status(500).json({ "message": "Unable to create User" });
+      res.status(500).json({ message: "Unable to create User" });
     }
   }
 });
