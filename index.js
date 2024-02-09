@@ -40,11 +40,9 @@ app.listen(process.env.PORT, () => {
 });
 
 // USER ENDPOINTS:
-// TODO: CREATE NEW USER ENDPOINT
-
+//  POST REGISTER NEW USER - returns user_id
 app.post(process.env.REGISTER_ENDPOINT, async (req, res) => {
   const { username, email, password } = await req.body;
-
   // check if user exists
   const userExists = await userService.authenticateUser([email, password]);
   if (userExists) {
@@ -52,15 +50,15 @@ app.post(process.env.REGISTER_ENDPOINT, async (req, res) => {
       .status(401)
       .json({ message: "Invalid Credentials, user already exists." });
   } else {
-    const userCreated = await userService.createUser([
+    const newUserId = await userService.createUser([
       username,
       email,
       password,
     ]);
-    if (userCreated) {
+    if (newUserId) {
       res
         .status(201)
-        .json({ message: `User ${username} successfully created!` });
+        .json({ message: `User ${username} successfully created!`, userId: `${newUserId}` });
     } else {
       res.status(500).json({ "message": "Unable to create User" });
     }
@@ -85,7 +83,7 @@ app.post(process.env.LOGIN_ENDPOINT, async (req, res) => {
     };
     const token = jwt.sign(payload, secretKey, options);
     // return token
-    res.status(200).json({ token });
+    res.status(200).json({ token, userId: `${authUser.user_id}` });
   } else {
     res.status(401).json({ message: "Invalid Credentials" });
   }
@@ -96,7 +94,7 @@ app.get("/", (req, res) => {
 });
 
 // PROTECTED ENDPOINTS
-// GET USER GROCERIES
+// GET USER STORAGE_AREAS, CATEGORIES, AND GROCERY_ITEMS
 app.get(process.env.GET_USER_DATA_ENDPOINT, validateToken, async (req, res) => {
   let id = req.params.userId;
   let user = await userService.getUserData(id);
