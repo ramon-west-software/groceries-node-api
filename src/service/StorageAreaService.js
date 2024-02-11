@@ -5,20 +5,20 @@ class StorageAreaService {
     this.storageDao = new StorageDao();
   }
 
-  async createStorageArea(userId, storageName) {
-    console.log(`creating new storage area ${storageName}...`);
+  async createStorageArea(storageDetails) {
+    console.log(`creating new storage area ${storageDetails.name}...`);
     let storageAreaId = null;
     let userStorageAreaId = null;
     let storageArea = null;
 
     // Insert storage_area with valid name
-    if (storageName) {
-      storageAreaId = await this.storageDao.insertStorageArea(storageName);
+    if (storageDetails.name) {
+      storageAreaId = await this.storageDao.insertStorageArea(storageDetails.name);
     }
 
     // insert user_storage_area with valid storage_id
     if (storageAreaId) {
-      const userStorageArea = { userId: userId, storageId: storageAreaId };
+      const userStorageArea = { userId: storageDetails.userId, storageId: storageAreaId };
       userStorageAreaId = await this.storageDao.insertUserStorageArea(
         userStorageArea
       );

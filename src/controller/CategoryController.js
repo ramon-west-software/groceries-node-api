@@ -7,11 +7,8 @@ const router = express.Router();
 
 router.post("/", validateToken, async (req, res) => {
   console.log("POST new category...");
-  const { storageId, name } = await req.body;
-  let category = await categoryService.createCategory(
-    storageId,
-    name
-  );
+  const categoryDetails = await req.body;
+  let category = await categoryService.createCategory(categoryDetails);
   res.json(category);
 });
 
