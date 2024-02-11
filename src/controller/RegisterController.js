@@ -1,7 +1,9 @@
 // AuthController.js
 import express from "express";
+import AuthService from "../service/AuthService.js";
 import UserService from "../service/UserService.js";
 
+const authService = new AuthService();
 const userService = new UserService();
 const router = express.Router();
 
@@ -9,7 +11,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { username, email, password } = await req.body;
   // check if user exists
-  const userExists = await userService.authenticateUser([email, password]);
+  let userExists = await authService.authenticateUser([email, password]);
   if (userExists) {
     res
       .status(401)

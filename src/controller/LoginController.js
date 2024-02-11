@@ -1,8 +1,10 @@
 // AuthController.js
 import express from "express";
+import AuthService from "../service/AuthService.js";
 import UserService from "../service/UserService.js";
 import jwt from "jsonwebtoken";
 
+const authService = new AuthService();
 const userService = new UserService();
 const secretKey = process.env.SECRET_KEY;
 const router = express.Router();
@@ -11,7 +13,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { email, password } = await req.body;
   // validate user exists in database
-  let authUser = await userService.authenticateUser([email, password]);
+  let authUser = await authService.authenticateUser([email, password]);
   if (authUser) {
     // generate token
     const payload = {

@@ -15,10 +15,6 @@ class UserService {
     return users;
   }
 
-  async authenticateUser(userDetails) {
-    const user = await this.userDao.authenticateUser(userDetails);
-    return user;
-  }
 
   async createUser(userDetails) {
     const newUserId = await this.userDao.insertUser(userDetails);
