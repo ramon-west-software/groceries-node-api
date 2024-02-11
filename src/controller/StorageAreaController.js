@@ -7,11 +7,8 @@ const router = express.Router();
 
 router.post("/", validateToken, async (req, res) => {
   console.log("POST new storage area...");
-  const { userId, name } = await req.body;
-  let storageArea = await storageAreaService.createStorageArea(
-    userId,
-    name
-  );
+  const storageDetails = await req.body;
+  let storageArea = await storageAreaService.createStorageArea(storageDetails);
   res.json(storageArea);
 });
 
