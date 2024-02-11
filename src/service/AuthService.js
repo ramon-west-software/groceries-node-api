@@ -9,8 +9,6 @@ class AuthService {
     const user = await this.userDao.authenticateUser(userDetails);
     return user;
   }
-
-  
 }
 
 export default AuthService;
