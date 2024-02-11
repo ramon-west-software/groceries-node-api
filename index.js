@@ -4,9 +4,9 @@ import cors from "cors";
 import LoginController from "./src/controller/LoginController.js";
 import RegisterController from "./src/controller/RegisterController.js";
 import UserController from "./src/controller/UserController.js";
-// import StorageAreaController from "./StorageAreaController.js";
-// import CategoryController from "./CategoryController.js";
-// import ItemController from "./ItemController.js";
+import StorageAreaController from "./src/controller/StorageAreaController.js";
+// import CategoryController from "./src/controller/CategoryController.js";
+// import ItemController from "./src/controller/ItemController.js";
 
 // initialize app and dependencies
 const app = express();
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(process.env.LOGIN_ENDPOINT, LoginController);
 app.use(process.env.REGISTER_ENDPOINT, RegisterController);
 app.use(process.env.USER_DATA_ENDPOINT, UserController);
-// app.use('/storage', StorageAreaController);
+app.use(process.env.STORAGE_ENDPOINT, StorageAreaController);
 // app.use('/category', CategoryController);
 // app.use('/item', ItemController);
 

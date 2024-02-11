@@ -5,38 +5,35 @@ class StorageAreaService {
     this.storageDao = new StorageDao();
   }
 
-  async getStorageArea(id) {
-    const storageArea = await this.storageDao.getStorageArea(id);
+  async createStorageArea(userId, storageName) {
+    console.log(`creating new storage area ${storageName}...`)
+    let storageAreaId = null;
+    let userStorageAreaId = null;
+    let storageArea = null;
+
+    // Insert storage_area with valid name
+    if (storageName) {
+      storageAreaId = await this.storageDao.insertStorageArea(storageName);
+    }
+
+    // insert user_storage_area with valid storage_id
+    if (storageAreaId) {
+      const userStorageArea = { userId: userId, storageId: storageAreaId };
+      userStorageAreaId = await this.storageDao.insertUserStorageArea(
+        userStorageArea
+      );
+    }
+    // select storage_area record if successfully inserted to both tables
+    if (userStorageAreaId) {
+      storageArea = await this.storageDao.getStorageArea(storageAreaId);
+    }
+
     return storageArea;
   }
-  
-  async getStorageAreasByUserId(userId) {
-    const storageAreas = await this.storageDao.getStorageAreasByUserId(userId);
-    return storageAreas;
-  }
 
-  async createStorageArea(storageArea) {
-    // Insert storage area first
-    const newStorageId = await this.storageDao.insertStorageArea(storageArea);
+  async editStorageArea(storageArea) {}
 
-    // use new ID to store userStorageArea record
-    if (newStorageId > 0) {
-      const userStorage = { userId: storageArea.userId, storageId: newStorageId };
-      await this.storageDao.insertUserStorageArea(userStorage);
-    }
-    // return all of user's storage areas
-    const storageAreas = await this.storageDao.getStorageAreasByUserId(storageArea.userId);
-    return  storageAreas;
-    
-  }
-
-  async editStorageArea(storageArea) {
-
-  }
-
-  async deleteStorageArea(id) {
-
-  }
+  async deleteStorageArea(id) {}
 }
 
 export default StorageAreaService;
