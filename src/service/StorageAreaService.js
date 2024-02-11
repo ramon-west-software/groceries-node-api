@@ -6,7 +6,7 @@ class StorageAreaService {
   }
 
   async createStorageArea(userId, storageName) {
-    console.log(`creating new storage area ${storageName}...`)
+    console.log(`creating new storage area ${storageName}...`);
     let storageAreaId = null;
     let userStorageAreaId = null;
     let storageArea = null;

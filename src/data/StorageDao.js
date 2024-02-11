@@ -3,25 +3,6 @@ import getDatabaseInstance from "./DataBaseSinglton.js";
 const databaseInstance = getDatabaseInstance();
 
 class StorageDao {
-  // set sql query and call Database.js query function
-  async getStorageArea(id) {
-    console.log("querying storage_area...");
-    // define query string
-    // note - MySql lets us return a JSON object using JSON_OBJECT function, meaning we don't need a helper function to format the result set
-    const sqlQuery = `
-      SELECT 
-        JSON_OBJECT(
-            'id', sa.storage_id,
-            'name', sa.storage_name
-        ) as storageArea
-        FROM storage_areas sa
-        where sa.storage_id = ?;`;
-
-    // call the Database.js function to query sql with paramater array
-    let storageArea = await databaseInstance.query(sqlQuery, [id]);
-    return storageArea;
-  }
-
   async insertStorageArea(name) {
     console.log("inserting storage_area...");
     const sql = `INSERT INTO storage_areas (storage_name) VALUES (?)`;
@@ -57,6 +38,25 @@ class StorageDao {
     );
 
     return result.insertId;
+  }
+
+  // set sql query and call Database.js query function
+  async getStorageArea(id) {
+    console.log("querying storage_area...");
+    // define query string
+    // note - MySql lets us return a JSON object using JSON_OBJECT function, meaning we don't need a helper function to format the result set
+    const sqlQuery = `
+      SELECT 
+        JSON_OBJECT(
+            'id', sa.storage_id,
+            'name', sa.storage_name
+        ) as storageArea
+        FROM storage_areas sa
+        where sa.storage_id = ?;`;
+
+    // call the Database.js function to query sql with paramater array
+    let storageArea = await databaseInstance.query(sqlQuery, [id]);
+    return storageArea;
   }
 }
 
