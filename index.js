@@ -5,7 +5,7 @@ import LoginController from "./src/controller/LoginController.js";
 import RegisterController from "./src/controller/RegisterController.js";
 import UserController from "./src/controller/UserController.js";
 import StorageAreaController from "./src/controller/StorageAreaController.js";
-// import CategoryController from "./src/controller/CategoryController.js";
+import CategoryController from "./src/controller/CategoryController.js";
 // import ItemController from "./src/controller/ItemController.js";
 
 // initialize app and dependencies
@@ -19,8 +19,8 @@ app.use(process.env.LOGIN_ENDPOINT, LoginController);
 app.use(process.env.REGISTER_ENDPOINT, RegisterController);
 app.use(process.env.USER_DATA_ENDPOINT, UserController);
 app.use(process.env.STORAGE_ENDPOINT, StorageAreaController);
-// app.use('/category', CategoryController);
-// app.use('/item', ItemController);
+app.use(process.env.CATEGORY_ENDPOINT, CategoryController);
+// app.use(process.env.ITEM_ENDPOINT, ItemController);
 
 // Global API ENDPOINTS
 app.listen(process.env.PORT, () => {
