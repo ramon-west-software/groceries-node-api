@@ -1,25 +1,16 @@
+import express from "express";
 import UserService from "../service/UserService.js";
+import { validateToken } from "../util/AuthToken.js";
 
-// TODO: move /users endpoints from index.js into this controller class
-class UserController {
-  constructor() {
-    this.userService = new UserService();
-  }
+const userService = new UserService();
+const router = express.Router();
 
-  async getUserData(id) {
-    const user = await this.userService.getUserData(id);
-    return user;
-  }
+// GET USER STORAGE_AREAS, CATEGORIES, AND GROCERY_ITEMS
+router.get(process.env.USER_ID_PARAM, validateToken, async (req, res) => {
+  console.log("Fetch user grocery data.");
+  let id = req.params.userId;
+  let user = await userService.getUserData(id);
+  res.json(user);
+});
 
-  async getAllUsers() {
-    const users = await this.userService.getAllUsers();
-    return users;
-  }
-
-  async authenticateUser(login) {
-    const user = await this.userService.authenticateUser(login);
-    return user;
-  }
-}
-
-export default UserController;
+export default router;
