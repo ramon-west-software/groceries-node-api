@@ -19,7 +19,7 @@ class CategoryService {
     // insert storage_area_category with valid category_id
     if (categoryId) {
       const storageAreaCategory = {
-        storageId: categoryDetails.storageId,
+        storageId: categoryDetails.parentId,
         categoryId: categoryId,
       };
       storageAreaCategoryId = await this.categoryDao.insertStorageAreaCategory(
