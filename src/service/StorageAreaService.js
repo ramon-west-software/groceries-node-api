@@ -18,7 +18,7 @@ class StorageAreaService {
 
     // insert user_storage_area with valid storage_id
     if (storageAreaId) {
-      const userStorageArea = { userId: storageDetails.userId, storageId: storageAreaId };
+      const userStorageArea = { userId: storageDetails.parentId, storageId: storageAreaId };
       userStorageAreaId = await this.storageDao.insertUserStorageArea(
         userStorageArea
       );
